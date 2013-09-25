@@ -1,8 +1,12 @@
+# installing into var without root causes problems on mac. do not run chown
+# /var. lets just install into /usr
+nginx_static_folder=/usr/local-servers/www
+
 install:
 	brew install nginx
 	mkdir -p /var/log/nginx
-	mkdir -p /var/local-servers/www
-	cp static/index.html /var/local-servers/www
+	mkdir -p /usr/local-servers/www
+	cp static/index.html /usr/local-servers/www
 	touch private.conf
 
 serve:
