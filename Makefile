@@ -2,9 +2,14 @@
 # /var. lets just install into /usr
 nginx_static_folder=/usr/local/local-servers/www
 
-godoc:
+launchdaemons:
+	mkdir -p ~/Library/LaunchDaemons
+
+godoc: launchdaemons
 	brew install go
 	python plist.py go > godoc.plist
+	cp godoc.plist ~/Library/LaunchDaemons/com.localservers.godoc.plist
+	launchctl load ~/Library/LaunchDaemons/com.localservers.godoc.plist
 
 venv:
 	virtualenv venv
