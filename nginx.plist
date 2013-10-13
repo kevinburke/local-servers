@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Label</key>
+        <string>com.localservers.nginx</string>
+        <key>ProgramArguments</key>
+        <array>
+            <string>/usr/local/bin/nginx</string>
+            <string>-c</string>
+            <string>/Users/kevin/code/local-servers/nginx.conf</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>StandardOutPath</key>
+        <string>/Users/kevin/var/log/nginx.log</string>
+        <key>StandardErrorPath</key>
+        <string>/Users/kevin/var/log/nginx.err.log</string>
+        <key>ServiceDescription</key>
+        <string>nginx forwarding for local development</string>
+    </dict>
+</plist>

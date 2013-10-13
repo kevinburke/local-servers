@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Label</key>
+        <string>com.kevin.ipython</string>
+        <key>ProgramArguments</key>
+        <array>
+            <string>/Users/kevin/.envs/ipython/bin/ipython</string>
+            <string>notebook</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>StandardOutPath</key>
+        <string>/Users/kevin/var/log/ipython.log</string>
+        <key>StandardErrorPath</key>
+        <string>/Users/kevin/var/log/ipython.err.log</string>
+        <key>ServiceDescription</key>
+        <string>ipython notebook runner</string>
+        <key>WorkingDirectory</key>
+        <string>/Users/kevin/.ipython_notebooks</string>
+        <key>Debug</key>
+        <true/>
+    </dict>
+</plist>
