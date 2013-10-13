@@ -3,7 +3,7 @@
 <plist version="1.0">
     <dict>
         <key>Label</key>
-        <string>com.kevin.ipython</string>
+        <string>com.localservers.ipython</string>
         <key>ProgramArguments</key>
         <array>
             <string>/Users/kevin/.envs/ipython/bin/ipython</string>
