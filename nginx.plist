@@ -13,9 +13,9 @@
         <key>RunAtLoad</key>
         <true/>
         <key>StandardOutPath</key>
-        <string>/Users/kevin/var/log/nginx.log</string>
+        <string>/var/log/nginx/localservers_access.log</string>
         <key>StandardErrorPath</key>
-        <string>/Users/kevin/var/log/nginx.err.log</string>
+        <string>/var/log/nginx/localservers_error.log</string>
         <key>ServiceDescription</key>
         <string>nginx forwarding for local development</string>
     </dict>
