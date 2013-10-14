@@ -32,3 +32,10 @@ if args.template == "nginx":
     template = Template(open('templates/nginx.plist.template').read())
     print template.render(nginx_binary=nginx_binary,
                           current_directory=current_directory)
+
+if args.template == "ipython":
+    home = subprocess.check_output("echo $HOME", shell=True).strip()
+    template = Template(open('templates/ipython.plist.template').read())
+    print template.render(home=home,
+                          current_directory=current_directory)
+

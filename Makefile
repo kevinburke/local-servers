@@ -2,22 +2,32 @@
 # /var. lets just install into /usr
 nginx_static_folder=/usr/local/local-servers/www
 
-launchctl_folder="~/Library/LaunchDaemons"
+launchctl_folder=~/Library/LaunchDaemons
+root_launchctl_folder=/Library/LaunchDaemons
+ipython_plist=ipython.plist
+nginx_plist=nginx.plist
 
 launchdaemons:
 	mkdir -p $(launchctl_folder)
 
-godoc: launchdaemons
+godoc: venv launchdaemons
 	brew install go
-	python plist.py go > godoc.plist
+	. venv/bin/activate; python plist.py go > godoc.plist
 	cp godoc.plist $(launchctl_folder)/com.localservers.godoc.plist
+	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
 	launchctl load $(launchctl_folder)/com.localservers.godoc.plist
 
 venv:
 	virtualenv venv
 
-python:
-	pip install -r requirements.txt --download-cache /tmp/pipcache
+python: venv launchdaemons
+	mkdir -p var/log
+	. venv/bin/activate; pip install -r requirements.txt --download-cache /tmp/pipcache
+	mkdir -p $(HOME)/.ipython_notebooks
+	. venv/bin/activate; python plist.py ipython > $(ipython_plist)
+	cp $(ipython_plist) $(launchctl_folder)/com.localservers.$(ipython_plist)
+	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
+	launchctl load $(launchctl_folder)/com.localservers.$(ipython_plist)
 
 nginx:
 	brew install nginx
@@ -25,10 +35,23 @@ nginx:
 	mkdir -p $(nginx_static_folder)
 	cp static/index.html $(nginx_static_folder)
 	touch private.conf
-	python plist.py nginx > nginx.plist
+	. venv/bin/activate; python plist.py nginx > nginx.plist
+
+	# These need to be copied to the root /Library because they run on port 80
+	# Enter your password at the prompt:
+	sudo cp $(nginx_plist) $(root_launchctl_folder)/com.localservers.$(nginx_plist)
+	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
+	sudo launchctl load $(root_launchctl_folder)/com.localservers.$(nginx_plist)
+
+clean:
+	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
+	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
+	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
+	rm -rf venv
 
 install: venv python godoc nginx
 
 serve:
 	# needs to run on port 80, so root
+	# You should however install this with "make nginx"
 	sudo nginx -c $(PWD)/nginx.conf

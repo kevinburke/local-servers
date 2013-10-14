@@ -6,19 +6,19 @@
         <string>com.localservers.ipython</string>
         <key>ProgramArguments</key>
         <array>
-            <string>/Users/kevin/code/local-servers/venv/bin/ipython</string>
+            <string>{{ current_directory }}/venv/bin/ipython</string>
             <string>notebook</string>
         </array>
         <key>RunAtLoad</key>
         <true/>
         <key>StandardOutPath</key>
-        <string>/Users/kevin/code/local-servers/var/log/ipython.log</string>
+        <string>{{ current_directory }}/var/log/ipython.log</string>
         <key>StandardErrorPath</key>
-        <string>/Users/kevin/code/local-servers/var/log/ipython.err.log</string>
+        <string>{{ current_directory }}/var/log/ipython.err.log</string>
         <key>ServiceDescription</key>
         <string>ipython notebook runner</string>
         <key>WorkingDirectory</key>
-        <string>/Users/kevin/.ipython_notebooks</string>
+        <string>{{ home }}/.ipython_notebooks</string>
         <key>Debug</key>
         <true/>
     </dict>
