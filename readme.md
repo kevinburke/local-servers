@@ -33,3 +33,8 @@ This will:
 2. Copy them to LaunchDaemons
 
 3. Install them with launchctl, so they load when your machine boots.
+
+4. Start an nginx server that serves those pages at `http://ipython` and
+   `http://godoc`
+
+5. Load that nginx server with launchctl.
