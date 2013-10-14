@@ -1,2 +1,4 @@
 Jinja2==2.7.1
 ipython
+pyzmq
+tornado
