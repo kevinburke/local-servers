@@ -6,6 +6,7 @@ launchctl_folder=~/Library/LaunchDaemons
 root_launchctl_folder=/Library/LaunchDaemons
 ipython_plist=ipython.plist
 nginx_plist=nginx.plist
+PYTHON_DOCS=python-2.7.6-docs-html
 
 launchdaemons:
 	mkdir -p $(launchctl_folder)
@@ -20,7 +21,14 @@ godoc: venv launchdaemons
 venv:
 	virtualenv venv
 
-python: venv launchdaemons
+python:
+	rm -rf $(nginx_static_folder)/python
+	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip -O var/python/$(PYTHON_DOCS).zip -nc || true
+	tar -xf var/python/$(PYTHON_DOCS).zip -C var/python
+	cp -r var/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
+	
+
+ipython: venv launchdaemons
 	mkdir -p var/log
 	. venv/bin/activate; pip install -r requirements.txt --download-cache /tmp/pipcache
 	mkdir -p $(HOME)/.ipython_notebooks
