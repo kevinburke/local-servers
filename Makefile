@@ -57,7 +57,7 @@ clean:
 	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
 	rm -rf venv
 
-install: venv python godoc nginx
+install: venv python ipython godoc nginx
 
 serve:
 	# needs to run on port 80, so root
