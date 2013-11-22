@@ -39,7 +39,8 @@ ipython: venv launchdaemons
 
 nginx:
 	brew install nginx
-	mkdir -p /var/log/nginx
+	sudo mkdir -p /var/log/nginx
+	sudo /usr/bin/chgrp -R admin /var/log/nginx
 	mkdir -p $(nginx_static_folder)
 	cp static/index.html $(nginx_static_folder)
 	touch private.conf
