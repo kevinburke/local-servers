@@ -1,13 +1,20 @@
 # Local server redirect
 
 This sets up a series of tasks to run at system startup, as well as an nginx
-server that can serve things at a given host.
+server that can serve things at a given host. Ever get on a plane and **then**
+realize you should have made the docs locally? This project does that for you.
 
-## Why should I use this?
+## What can I do with it?
 
-After you run this, you can go to `http://godoc` to get a Go documentation
-browser, or `http://ipython` to get the iPython notebook. All your iPython
-notebooks will be saved in `.ipython_notebooks`.
+- View the Python docs by going to "http://python"
+
+- View the Ruby docs by going to "http://ruby"
+
+- View Golang docs by going to "http://godoc"
+
+- Open IPython by going to "http://ipython"
+
+And more! Add anything you want to `private.conf` to add this porject.
 
 ## Screenshots
 
