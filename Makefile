@@ -42,8 +42,8 @@ ruby:
 	mkdir -p $(nginx_static_folder)/ruby/css
 	cp $(nginx_static_folder)/ruby/stdlib-doc.css $(nginx_static_folder)/ruby/css
 	cp $(nginx_static_folder)/ruby/stdlib-doc.css $(nginx_static_folder)/ruby/css
-	cp -r $(nginx_static_folder)/ruby/libdoc/uri/rdoc/css $(nginx_static_folder)/ruby/css
-	cp -r $(nginx_static_folder)/ruby/libdoc/uri/rdoc/js $(nginx_static_folder)/ruby/js
+	cp -r $(nginx_static_folder)/ruby/libdoc/uri/rdoc/css/ $(nginx_static_folder)/ruby/css
+	cp -r $(nginx_static_folder)/ruby/libdoc/uri/rdoc/js/ $(nginx_static_folder)/ruby/js
 
 ipython: venv launchdaemons
 	mkdir -p var/log
