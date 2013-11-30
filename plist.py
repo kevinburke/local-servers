@@ -4,7 +4,7 @@ import subprocess
 
 from jinja2 import Template
 
-GODOC_DEFAULT_PORT = 6060
+GODOC_DEFAULT_PORT = 6061
 
 parser = argparse.ArgumentParser(description='Produce configurable plist files')
 parser.add_argument('template', help='The location of the plist template')
