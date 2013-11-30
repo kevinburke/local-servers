@@ -6,7 +6,11 @@ launchctl_folder=~/Library/LaunchDaemons
 root_launchctl_folder=/Library/LaunchDaemons
 ipython_plist=ipython.plist
 nginx_plist=nginx.plist
+
 PYTHON_DOCS=python-2.7.6-docs-html
+
+PHP_DOCS=php-chunked-xhtml
+PHP_PKG=php_manual_en.tar.gz
 RUBY_DOCS=ruby_1_9_3_stdlib
 RUBY_PKG=$(RUBY_DOCS)_rdocs.tgz
 USER_AGENT='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36'
@@ -24,13 +28,6 @@ godoc: venv launchdaemons
 venv:
 	virtualenv venv
 
-python:
-	rm -rf $(nginx_static_folder)/python
-	mkdir -p var/python
-	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip --header "User-Agent: $(USER_AGENT)" --output-document var/python/$(PYTHON_DOCS).zip -nc || true
-	tar -xf var/python/$(PYTHON_DOCS).zip -C var/python
-	cp -r var/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
-
 ruby:
 	rm -rf $(nginx_static_folder)/ruby
 	mkdir -p var/ruby
@@ -45,6 +42,13 @@ ruby:
 	cp -r $(nginx_static_folder)/ruby/libdoc/uri/rdoc/css/ $(nginx_static_folder)/ruby/css
 	cp -r $(nginx_static_folder)/ruby/libdoc/uri/rdoc/js/ $(nginx_static_folder)/ruby/js
 
+python:
+	rm -rf $(nginx_static_folder)/python
+	mkdir -p var/python
+	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip --header "User-Agent: $(USER_AGENT)" --output-document var/python/$(PYTHON_DOCS).zip -nc || true
+	tar -xf var/python/$(PYTHON_DOCS).zip -C var/python
+	cp -r var/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
+
 ipython: venv launchdaemons
 	mkdir -p var/log
 	. venv/bin/activate; pip install -r requirements.txt --download-cache /tmp/pipcache
@@ -53,6 +57,12 @@ ipython: venv launchdaemons
 	cp $(ipython_plist) $(launchctl_folder)/com.localservers.$(ipython_plist)
 	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
 	launchctl load $(launchctl_folder)/com.localservers.$(ipython_plist)
+
+php:
+	mkdir -p var/php
+	wget http://www.php.net/get/php_manual_en.tar.gz/from/this/mirror --header "User-Agent: $(USER_AGENT)" --output-document var/php/$(PHP_PKG) -nc || true
+	tar -xf var/php/$(PHP_PKG) -C var/php
+	cp -r var/php/$(PHP_DOCS) $(nginx_static_folder)/php
 
 nginx:
 	brew install nginx
