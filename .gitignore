@@ -2,3 +2,5 @@ private.conf
 venv
 *.plist
 var
+
+devdocs

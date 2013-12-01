@@ -1,3 +1,5 @@
+.PHONY: devdocs godoc ruby python php
+
 # installing into var without root causes problems on mac. do not run chown
 # /var. lets just install into /usr
 nginx_static_folder=/usr/local/local-servers/www
@@ -15,6 +17,8 @@ RUBY_DOCS=ruby_1_9_3_stdlib
 RUBY_PKG=$(RUBY_DOCS)_rdocs.tgz
 USER_AGENT='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36'
 
+UNAME:=$(shell uname)
+
 launchdaemons:
 	mkdir -p $(launchctl_folder)
 
@@ -22,8 +26,10 @@ godoc: venv launchdaemons
 	brew install go
 	. venv/bin/activate; python plist.py go > godoc.plist
 	cp godoc.plist $(launchctl_folder)/com.localservers.godoc.plist
+ifeq ($(UNAME), Darwin)
 	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
 	launchctl load $(launchctl_folder)/com.localservers.godoc.plist
+endif
 
 venv:
 	virtualenv venv
@@ -55,8 +61,10 @@ ipython: venv launchdaemons
 	mkdir -p $(HOME)/.ipython_notebooks
 	. venv/bin/activate; python plist.py ipython > $(ipython_plist)
 	cp $(ipython_plist) $(launchctl_folder)/com.localservers.$(ipython_plist)
+ifeq ($(UNAME), Darwin)
 	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
 	launchctl load $(launchctl_folder)/com.localservers.$(ipython_plist)
+endif
 
 php:
 	mkdir -p var/php
@@ -76,13 +84,17 @@ nginx:
 	# These need to be copied to the root /Library because they run on port 80
 	# Enter your password at the prompt:
 	sudo cp $(nginx_plist) $(root_launchctl_folder)/com.localservers.$(nginx_plist)
+ifeq ($(UNAME), Darwin)
 	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
 	sudo launchctl load $(root_launchctl_folder)/com.localservers.$(nginx_plist)
+endif
 
 clean:
+ifeq ($(UNAME), Darwin)
 	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
 	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
 	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
+endif
 	rm -rf venv
 
 install: venv python ipython godoc nginx ruby
@@ -91,3 +103,10 @@ serve:
 	# needs to run on port 80, so root
 	# You should however install this with "make nginx"
 	sudo nginx -c $(PWD)/nginx.conf
+
+devdocs:
+	if [ ! -d $(PWD)/devdocs ]; then git clone git@github.com:Thibaut/devdocs.git; fi
+	cd devdocs && gem install bundler
+	cd devdocs && bundle install
+	cd devdocs && thor docs:download --all
+	cd devdocs && rackup
