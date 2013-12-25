@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Label</key>
+        <string>com.localservers.devdocs</string>
+        <key>ProgramArguments</key>
+        <array>
+            <string>{{ rackup_binary }}</string>
+        </array>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>WorkingDirectory</key>
+        <string>{{ current_directory }}/usr/devdocs/devdocs-master</string>
+        <key>StandardOutPath</key>
+        <string>{{ current_directory }}/var/log/devdocs.log</string>
+        <key>StandardErrorPath</key>
+        <string>{{ current_directory }}/var/log/devdocs.err.log</string>
+        <key>ServiceDescription</key>
+        <string>Devdocs server</string>
+    </dict>
+</plist>
+
+

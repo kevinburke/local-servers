@@ -8,6 +8,7 @@ launchctl_folder=~/Library/LaunchDaemons
 root_launchctl_folder=/Library/LaunchDaemons
 ipython_plist=ipython.plist
 nginx_plist=nginx.plist
+devdocs_plist=devdocs.plist
 
 PYTHON_DOCS=python-2.7.6-docs-html
 
@@ -35,13 +36,27 @@ endif
 venv:
 	virtualenv venv
 
+devdocs:
+	mkdir -p usr/devdocs
+	wget https://github.com/Thibaut/devdocs/archive/master.zip --header "User-Agent: $(USER_AGENT)" --output-document usr/devdocs/devdocs.zip -nc || true
+	tar -xf usr/devdocs/devdocs.zip -C usr/devdocs
+	cd usr/devdocs/devdocs-master && gem install bundler
+	cd usr/devdocs/devdocs-master && bundle install
+	cd usr/devdocs/devdocs-master && thor docs:download --all
+	. venv/bin/activate; python plist.py devdocs > $(devdocs_plist)
+	cp $(devdocs_plist) $(launchctl_folder)/com.localservers.$(devdocs_plist)
+ifeq ($(UNAME), Darwin)
+	launchctl unload $(launchctl_folder)/com.localservers.$(devdocs_plist) || true
+	launchctl load $(launchctl_folder)/com.localservers.$(devdocs_plist)
+endif
+
 ruby:
 	rm -rf $(nginx_static_folder)/ruby
-	mkdir -p var/ruby
+	mkdir -p usr/ruby
 	# Ruby-doc doesn't like wget for some reason.
-	wget http://ruby-doc.org/downloads/$(RUBY_PKG) --header "User-Agent: $(USER_AGENT)" --output-document var/ruby/$(RUBY_PKG) -nc || true
-	tar -xf var/ruby/$(RUBY_PKG) -C var/ruby
-	cp -r var/ruby/$(RUBY_DOCS) $(nginx_static_folder)/ruby
+	wget http://ruby-doc.org/downloads/$(RUBY_PKG) --header "User-Agent: $(USER_AGENT)" --output-document usr/ruby/$(RUBY_PKG) -nc || true
+	tar -xf usr/ruby/$(RUBY_PKG) -C usr/ruby
+	cp -r usr/ruby/$(RUBY_DOCS) $(nginx_static_folder)/ruby
 	# Get the CSS to load...
 	mkdir -p $(nginx_static_folder)/ruby/css
 	cp $(nginx_static_folder)/ruby/stdlib-doc.css $(nginx_static_folder)/ruby/css
@@ -51,10 +66,10 @@ ruby:
 
 python:
 	rm -rf $(nginx_static_folder)/python
-	mkdir -p var/python
-	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip --header "User-Agent: $(USER_AGENT)" --output-document var/python/$(PYTHON_DOCS).zip -nc || true
-	tar -xf var/python/$(PYTHON_DOCS).zip -C var/python
-	cp -r var/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
+	mkdir -p usr/python
+	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip --header "User-Agent: $(USER_AGENT)" --output-document usr/python/$(PYTHON_DOCS).zip -nc || true
+	tar -xf usr/python/$(PYTHON_DOCS).zip -C usr/python
+	cp -r usr/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
 
 ipython: venv launchdaemons
 	mkdir -p var/log
@@ -68,10 +83,10 @@ ifeq ($(UNAME), Darwin)
 endif
 
 php:
-	mkdir -p var/php
-	wget http://www.php.net/get/php_manual_en.tar.gz/from/this/mirror --header "User-Agent: $(USER_AGENT)" --output-document var/php/$(PHP_PKG) -nc || true
-	tar -xf var/php/$(PHP_PKG) -C var/php
-	cp -r var/php/$(PHP_DOCS) $(nginx_static_folder)/php
+	mkdir -p usr/php
+	wget http://www.php.net/get/php_manual_en.tar.gz/from/this/mirror --header "User-Agent: $(USER_AGENT)" --output-document usr/php/$(PHP_PKG) -nc || true
+	tar -xf usr/php/$(PHP_PKG) -C usr/php
+	cp -r usr/php/$(PHP_DOCS) $(nginx_static_folder)/php
 
 nginx:
 	brew install nginx
@@ -87,6 +102,7 @@ nginx:
 	sudo cp $(nginx_plist) $(root_launchctl_folder)/com.localservers.$(nginx_plist)
 ifeq ($(UNAME), Darwin)
 	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
+	sudo pkill nginx || true
 	sudo launchctl load $(root_launchctl_folder)/com.localservers.$(nginx_plist)
 endif
 
@@ -105,9 +121,3 @@ serve:
 	# You should however install this with "make nginx"
 	sudo nginx -c $(PWD)/nginx.conf
 
-devdocs:
-	if [ ! -d $(PWD)/devdocs ]; then git clone git@github.com:Thibaut/devdocs.git; fi
-	cd devdocs && gem install bundler
-	cd devdocs && bundle install
-	cd devdocs && thor docs:download --all
-	cd devdocs && rackup

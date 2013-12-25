@@ -36,6 +36,12 @@ if args.template == "nginx":
 if args.template == "ipython":
     home = subprocess.check_output("echo $HOME", shell=True).strip()
     template = Template(open('templates/ipython.plist.template').read())
-    print template.render(home=home,
-                          current_directory=current_directory)
+    print template.render(home=home, current_directory=current_directory)
 
+if args.template == "devdocs":
+    devdocs_dir = "{cur}/usr/devdocs/devdocs-master".format(cur=current_directory)
+    rackup_binary = subprocess.check_output(["which", "rackup"],
+                                            cwd=devdocs_dir).strip()
+    template = Template(open('templates/devdocs.plist.template').read())
+    print template.render(current_directory=current_directory,
+                          rackup_binary=rackup_binary)
