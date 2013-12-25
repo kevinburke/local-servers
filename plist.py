@@ -39,8 +39,12 @@ if args.template == "ipython":
     print template.render(home=home, current_directory=current_directory)
 
 if args.template == "devdocs":
+    #try:
+        #rubby = subprocess.check_output(["which", "rvm"])
+    #except subprocess.CalledProcessError:
+        #pass
     devdocs_dir = "{cur}/usr/devdocs/devdocs-master".format(cur=current_directory)
-    rackup_binary = subprocess.check_output(["which", "rackup"],
+    rackup_binary = subprocess.check_output(["which", "ddocs_rackup"],
                                             cwd=devdocs_dir).strip()
     template = Template(open('templates/devdocs.plist.template').read())
     print template.render(current_directory=current_directory,

@@ -37,12 +37,15 @@ venv:
 	virtualenv venv
 
 devdocs:
+	#python rvm_warning.py
 	mkdir -p usr/devdocs
 	wget https://github.com/Thibaut/devdocs/archive/master.zip --header "User-Agent: $(USER_AGENT)" --output-document usr/devdocs/devdocs.zip -nc || true
 	tar -xf usr/devdocs/devdocs.zip -C usr/devdocs
 	cd usr/devdocs/devdocs-master && gem install bundler
-	cd usr/devdocs/devdocs-master && bundle install
+	cd usr/devdocs/devdocs-master && \
+		bundle install
 	cd usr/devdocs/devdocs-master && thor docs:download --all
+	rvm wrapper 2.0.0 ddocs rackup
 	. venv/bin/activate; python plist.py devdocs > $(devdocs_plist)
 	cp $(devdocs_plist) $(launchctl_folder)/com.localservers.$(devdocs_plist)
 ifeq ($(UNAME), Darwin)
