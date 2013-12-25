@@ -24,6 +24,7 @@ launchdaemons:
 
 godoc: venv launchdaemons
 	brew install go
+	go install code.google.com/p/go.tools/cmd/godoc
 	. venv/bin/activate; python plist.py go > godoc.plist
 	cp godoc.plist $(launchctl_folder)/com.localservers.godoc.plist
 ifeq ($(UNAME), Darwin)
