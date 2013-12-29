@@ -35,16 +35,18 @@ endif
 
 venv:
 	virtualenv venv
+	. venv/bin/activate; pip install -r requirements.txt --download-cache /tmp/pipcache
 
-devdocs:
+devdocs: venv
 	#python rvm_warning.py
 	mkdir -p usr/devdocs
 	wget https://github.com/Thibaut/devdocs/archive/master.zip --header "User-Agent: $(USER_AGENT)" --output-document usr/devdocs/devdocs.zip -nc || true
-	tar -xf usr/devdocs/devdocs.zip -C usr/devdocs
+	#tar -xf usr/devdocs/devdocs.zip -C usr/devdocs
 	cd usr/devdocs/devdocs-master && gem install bundler
-	cd usr/devdocs/devdocs-master && \
-		bundle install
+	cd usr/devdocs/devdocs-master && gem install rack
+	cd usr/devdocs/devdocs-master && bundle install
 	cd usr/devdocs/devdocs-master && thor docs:download --all
+	rvm install 2.0.0
 	rvm wrapper 2.0.0 ddocs rackup
 	. venv/bin/activate; python plist.py devdocs > $(devdocs_plist)
 	cp $(devdocs_plist) $(launchctl_folder)/com.localservers.$(devdocs_plist)
@@ -76,7 +78,7 @@ python:
 
 ipython: venv launchdaemons
 	mkdir -p var/log
-	. venv/bin/activate; pip install -r requirements.txt --download-cache /tmp/pipcache
+	. venv/bin/activate; pip install -r ipython-requirements.txt --download-cache /tmp/pipcache
 	mkdir -p $(HOME)/.ipython_notebooks
 	. venv/bin/activate; python plist.py ipython > $(ipython_plist)
 	cp $(ipython_plist) $(launchctl_folder)/com.localservers.$(ipython_plist)
@@ -114,8 +116,10 @@ ifeq ($(UNAME), Darwin)
 	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
 	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
 	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
+	launchctl unload $(launchctl_folder)/com.localservers.devdocs.plist
 endif
 	rm -rf venv
+	rm -rf usr/devdocs
 
 install: venv python ipython godoc nginx ruby
 
