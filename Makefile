@@ -41,7 +41,7 @@ devdocs: venv
 	#python rvm_warning.py
 	mkdir -p usr/devdocs
 	wget https://github.com/Thibaut/devdocs/archive/master.zip --header "User-Agent: $(USER_AGENT)" --output-document usr/devdocs/devdocs.zip -nc || true
-	#tar -xf usr/devdocs/devdocs.zip -C usr/devdocs
+	tar -xf usr/devdocs/devdocs.zip -C usr/devdocs
 	cd usr/devdocs/devdocs-master && gem install bundler
 	cd usr/devdocs/devdocs-master && gem install rack
 	cd usr/devdocs/devdocs-master && bundle install
