@@ -1,4 +1,4 @@
-.PHONY: devdocs godoc ruby python php
+.PHONY: devdocs godoc ruby python php venv
 
 # installing into var without root causes problems on mac. do not run chown
 # /var. lets just install into /usr
@@ -75,6 +75,14 @@ python:
 	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip --header "User-Agent: $(USER_AGENT)" --output-document usr/python/$(PYTHON_DOCS).zip -nc || true
 	tar -xf usr/python/$(PYTHON_DOCS).zip -C usr/python
 	cp -r usr/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
+
+jinja2: venv
+	rm -rf $(nginx_static_folder)/jinja2
+	mkdir -p usr/jinja2
+	wget https://github.com/mitsuhiko/jinja2/archive/master.zip --header "User-Agent: $(USER_AGENT)" --output-document usr/jinja2/jinja2.zip -nc || true
+	tar -xf usr/jinja2/jinja2.zip -C usr/jinja2
+	. venv/bin/activate; cd usr/jinja2/jinja2-master/docs && make html
+	cp -r usr/jinja2/jinja2-master/docs/_build/html $(nginx_static_folder)/jinja2
 
 ipython: venv launchdaemons
 	mkdir -p var/log
