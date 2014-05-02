@@ -102,6 +102,11 @@ php:
 	cp -r usr/php/$(PHP_DOCS) $(nginx_static_folder)/php
 
 nginx:
+	[[ -d usr/nginx.org ]] || hg clone http://hg.nginx.org/nginx.org usr/nginx.org
+	@cd usr/nginx.org && make 
+	cp -r usr/nginx.org/libxslt $(nginx_static_folder)/nginx.org
+
+nginx-server:
 	brew install nginx
 	sudo mkdir -p /var/log/nginx
 	sudo /usr/bin/chgrp -R admin /var/log/nginx
@@ -129,10 +134,10 @@ endif
 	rm -rf venv
 	rm -rf usr/devdocs
 
-install: venv python ipython godoc nginx ruby
+install: venv python ipython godoc nginx nginx-server ruby
 
 serve:
 	# needs to run on port 80, so root
-	# You should however install this with "make nginx"
+	# You should however install this with "make nginx-server"
 	sudo nginx -c $(PWD)/nginx.conf
 
