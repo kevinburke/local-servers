@@ -35,7 +35,7 @@ endif
 
 venv:
 	virtualenv venv
-	. venv/bin/activate; pip install -r requirements.txt --download-cache /tmp/pipcache
+	. venv/bin/activate; pip install -r requirements.txt
 
 devdocs: venv
 	#python rvm_warning.py
@@ -86,7 +86,7 @@ jinja2: venv
 
 ipython: venv launchdaemons
 	mkdir -p var/log
-	. venv/bin/activate; pip install -r ipython-requirements.txt --download-cache /tmp/pipcache
+	. venv/bin/activate; pip install 'ipython[notebook]'
 	mkdir -p $(HOME)/.ipython_notebooks
 	. venv/bin/activate; python plist.py ipython > $(ipython_plist)
 	cp $(ipython_plist) $(launchctl_folder)/com.localservers.$(ipython_plist)
