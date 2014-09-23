@@ -13,6 +13,10 @@
         </array>
         <key>RunAtLoad</key>
         <true/>
+        <key>StandardOutPath</key>
+        <string>{{ home }}/var/log/godoc/godoc_access.log</string>
+        <key>StandardErrorPath</key>
+        <string>{{ home }}/var/log/godoc/godoc_error.log</string>
         <key>ServiceDescription</key>
         <string>Godoc server</string>
     </dict>

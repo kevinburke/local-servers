@@ -11,6 +11,7 @@ parser.add_argument('template', help='The location of the plist template')
 parser.add_argument('--port', help='Which port the service should listen on')
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
+home = os.environ["HOME"].strip()
 
 args = parser.parse_args()
 if args.template == "go":
@@ -21,7 +22,8 @@ if args.template == "go":
     except subprocess.CalledProcessError as e:
         print "\nCould not find godoc on path! Install godoc to use the godoc server\n"
         raise
-    print template.render(godoc_binary=godoc_binary, godoc_port=port)
+    os.mkdir(os.path.join(home, "var", "log", "godoc"))
+    print template.render(godoc_binary=godoc_binary, godoc_port=port, home=home)
 
 if args.template == "nginx":
     try:
@@ -34,7 +36,6 @@ if args.template == "nginx":
                           current_directory=current_directory)
 
 if args.template == "ipython":
-    home = subprocess.check_output("echo $HOME", shell=True).strip()
     template = Template(open('templates/ipython.plist.template').read())
     print template.render(home=home, current_directory=current_directory)
 
