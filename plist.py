@@ -1,4 +1,5 @@
 import argparse
+import errno
 import os
 import subprocess
 
@@ -22,7 +23,12 @@ if args.template == "go":
     except subprocess.CalledProcessError as e:
         print "\nCould not find godoc on path! Install godoc to use the godoc server\n"
         raise
-    os.mkdir(os.path.join(home, "var", "log", "godoc"))
+    try:
+        os.mkdir(os.path.join(home, "var", "log", "godoc"))
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
     print template.render(godoc_binary=godoc_binary, godoc_port=port, home=home)
 
 if args.template == "nginx":
