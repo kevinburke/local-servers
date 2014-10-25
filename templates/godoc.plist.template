@@ -9,7 +9,6 @@
             <string>{{ godoc_binary }}</string>
             <string>-http=:{{ godoc_port }}</string>
             <string>-play=true</string>
-            <string>-index=true</string>
         </array>
         <key>RunAtLoad</key>
         <true/>
