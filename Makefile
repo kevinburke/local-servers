@@ -124,13 +124,15 @@ ifeq ($(UNAME), Darwin)
 	sudo launchctl load $(root_launchctl_folder)/com.localservers.$(nginx_plist)
 endif
 
-clean:
+unload:
 ifeq ($(UNAME), Darwin)
 	sudo launchctl unload $(root_launchctl_folder)/com.localservers.$(nginx_plist) || true
 	launchctl unload $(launchctl_folder)/com.localservers.$(ipython_plist) || true
 	launchctl unload $(launchctl_folder)/com.localservers.godoc.plist
 	launchctl unload $(launchctl_folder)/com.localservers.devdocs.plist
 endif
+
+clean: unload
 	rm -rf venv
 	rm -rf usr/devdocs
 
