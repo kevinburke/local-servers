@@ -8,6 +8,7 @@
         <array>
             <string>{{ current_directory }}/venv/bin/ipython</string>
             <string>notebook</string>
+            <string>--port={{ port }}</string>
         </array>
         <key>RunAtLoad</key>
         <true/>

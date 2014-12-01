@@ -6,6 +6,7 @@ import subprocess
 from jinja2 import Template
 
 GODOC_DEFAULT_PORT = 6061
+IPYTHON_DEFAULT_PORT = 9999
 
 parser = argparse.ArgumentParser(description='Produce configurable plist files')
 parser.add_argument('template', help='The location of the plist template')
@@ -42,8 +43,9 @@ if args.template == "nginx":
                           current_directory=current_directory))
 
 if args.template == "ipython":
+    port = args.port or IPYTHON_DEFAULT_PORT
     template = Template(open('templates/ipython.plist.template').read())
-    print(template.render(home=home, current_directory=current_directory))
+    print(template.render(home=home, port=port, current_directory=current_directory))
 
 if args.template == "devdocs":
     #try:
