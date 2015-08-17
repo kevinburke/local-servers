@@ -10,7 +10,7 @@ ipython_plist=ipython.plist
 nginx_plist=nginx.plist
 devdocs_plist=devdocs.plist
 
-PYTHON_DOCS=python-2.7.6-docs-html
+PYTHON_DOCS=python-2.7.10-docs-html
 
 PHP_DOCS=php-chunked-xhtml
 PHP_PKG=php_manual_en.tar.gz
@@ -25,7 +25,7 @@ launchdaemons:
 
 godoc: venv launchdaemons
 	brew install go
-	go install code.google.com/p/go.tools/cmd/godoc
+	go install golang.org/x/tools/cmd/godoc
 	. venv/bin/activate; python plist.py go > godoc.plist
 	cp godoc.plist $(launchctl_folder)/com.localservers.godoc.plist
 ifeq ($(UNAME), Darwin)
@@ -74,6 +74,7 @@ python:
 	mkdir -p usr/python
 	wget http://docs.python.org/2/archives/$(PYTHON_DOCS).zip --header "User-Agent: $(USER_AGENT)" --output-document usr/python/$(PYTHON_DOCS).zip -nc || true
 	tar -xf usr/python/$(PYTHON_DOCS).zip -C usr/python
+	mkdir -p $(nginx_static_folder)/python
 	cp -r usr/python/$(PYTHON_DOCS)/ $(nginx_static_folder)/python
 
 jinja2: venv
@@ -142,4 +143,3 @@ serve:
 	# needs to run on port 80, so root
 	# You should however install this with "make nginx-server"
 	sudo nginx -c $(PWD)/nginx.conf
-
